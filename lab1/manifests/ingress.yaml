@@ -13,4 +13,4 @@ spec:
         - path : /otusapp/tyankis($|/)(.*)
           backend :
             serviceName : lab1-service
-            servicePort : 9000
+            servicePort : 8000

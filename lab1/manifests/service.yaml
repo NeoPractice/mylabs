@@ -7,6 +7,6 @@ spec:
     app: lab1-py-app
   ports:
     - protocol: TCP
-      port: 9000
+      port: 8000
       targetPort: 80 
   type: NodePort
