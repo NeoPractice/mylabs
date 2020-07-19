@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: lab1-deployment
+spec:
+    replicas: 2
+    selector:
+       matchLabels:
+          app: lab1-py-app
+    template:
+       metadata:
+          labels:
+             app: lab1-py-app
+       spec:
+          containers:
+          - name: lab1-py
+            image: student12345/lab1-py:latest
+            ports:
+              - name: web 
+                containerPort: 80
+            livenessProbe:
+              httpGet:
+                port: 80
+                path: /
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              timeoutSeconds: 2
+            readinessProbe:
+              httpGet:
+                port: 80
+                path: /health
+              initialDelaySeconds: 10
+              periodSeconds: 5
