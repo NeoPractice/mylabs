@@ -1,0 +1,35 @@
+##запуск
+запустить docker quikstart terminal
+открыть cmd D:\Program Files\Kubernetes\Minikube
+minikube status
+minikube start
+kubectl get namespaces
+###для первого запуска ### kubectl create namespace myapp
+kubectl config set-context --current --namespace=myapp
+minikube docker-env
+@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env') DO @%i
+SET DOCKER_TLS_VERIFY="1"
+docker ps
+docker images
+###λ docker stop b97bb04f2fe0
+###λ docker rm b97bb04f2fe0
+###λ docker rmi 45b5c40caa9b
+##собрать локально образ
+cd D:\distr\1\git\local_dirs\lab1\lab1-py
+docker build -t lab1-py .
+####Successfully built 99408ff97fd7
+####Successfully tagged lab1-py:latest
+## запушить образ в dockerhub
+docker logout
+docker login
+docker tag 99408ff97fd7 student12345/lab1-py:latest
+docker push student12345/lab1-py:latest
+## ingress
+ minikube addons enable ingress
+ kubectl get pods -n kube-system | grep ingress
+ kubectl apply -f deployment.yaml -f service.yaml -f ingress.yaml
+ D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab1\manifests
+ http://arch.homework/otusapp/tyankis/health
+ minikube service lab1-service --url -n myapp
+http://192.168.99.103:31344
+c:\Windows\System32\drivers\etc\
