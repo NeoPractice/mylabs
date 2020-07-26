@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: lab2-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host : arch.homework
+    http :
+      paths :
+        - path : /otusapp/tyankis($|/)(.*)
+          backend :
+            serviceName : lab2-service
+            servicePort : 8000

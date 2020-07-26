@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2beta5
+kind: Config
+metadata:
+  name: skaffold
+build:
+  artifacts:
+  - image: student12345/lab2-py
+    context: lab2-py
+deploy:
+  kubectl:
+    manifests:
+    - app-config.yaml
+    - deployment.yaml
+    - service.yaml
+    - ingress.yaml

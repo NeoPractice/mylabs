@@ -1,0 +1,38 @@
+запустить docker quikstart terminal
+#minikube
+открыть cmd D:\Program Files\Kubernetes\Minikube
+minikube start
+kubectl config set-context --current --namespace=myapp
+@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env') DO @%i
+SET DOCKER_TLS_VERIFY="1"
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+cd D:\distr\1\git\local_dirs\lab2\installdb
+helm delete pg
+helm install pg bitnami/postgresql -f values.yaml
+
+minikube service postgres -n myapp --url
+http://192.168.99.103:31176
+cd D:\distr\1\git\local_dirs\lab2\installdb
+kubectl apply -f initdb-initc.yaml
+job.batch/lab2-initdb created
+http://base64.ru/
+cG9zdGdyZXNxbCtwc3ljb3BnMjovL215dXNlcjpwYXNzd2RAcG9zdGdyZXMvbXlhcHAK = postgresql+psycopg2://myuser:passwd@postgres/myapp
+cd D:\distr\1\git\local_dirs\lab2\lab2-py
+docker login
+docker build -t lab2-py .
+docker tag b3e3789b9ce0 student12345/lab2-py:latest
+docker push student12345/lab2-py:latest
+docker pull student12345/lab2-py:latest
+cd D:\distr\1\git\local_dirs\lab2
+skaffold run
+minikube service lab2-service --url -n myapp
+http://192.168.99.103:31462
+minikube service postgres -n myapp --url
+http://192.168.99.103:31176
+
+{"GREETING": "Bambaleilo", "DATABASE_URI": "postgresql+psycopg2://myuser:passwd@postgres/myapp\n", "HOSTNAME": "lab2-deployment-5c5fbbf6c9-9wtz2"}
+
+minikube service -n myapp --url hello-service
+docker system prune -a

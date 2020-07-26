@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab2-service
+spec:
+  selector:
+    app: lab2-py-app
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: web
+  type: NodePort

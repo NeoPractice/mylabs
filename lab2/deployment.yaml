@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: lab2-deployment
+spec:
+    replicas: 2
+    selector:
+       matchLabels:
+          app: lab2-py-app
+    template:
+       metadata:
+          labels:
+             app: lab2-py-app
+       spec:
+          containers:
+          - name: lab2-py
+            image: student12345/lab2-py:latest
+            env:
+              - name: DATABASE_URI
+                valueFrom:
+                  secretKeyRef:
+                    name: lab2-secret
+                    key: DATABASE_URI
+              - name: GREETING
+                valueFrom:
+                  configMapKeyRef:
+                    name: lab2-config
+                    key: GREETING
+            ports:
+              - name: web 
+                containerPort: 80
+            livenessProbe:
+              httpGet:
+                port: 80
+                path: /
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              timeoutSeconds: 2
+            readinessProbe:
+              httpGet:
+                port: 80
+                path: /health
+              initialDelaySeconds: 10
+              periodSeconds: 5
