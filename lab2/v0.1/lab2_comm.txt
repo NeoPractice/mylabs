@@ -31,6 +31,13 @@ docker tag 99408ff97fd7 student12345/lab2-py:latest
 docker push student12345/lab2-py:latest
 docker pull student12345/lab2-py:latest
 ##
+helm uninstall lab2
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab2\v0.1
+helm install lab2 ./lab2-chart
+
+
+
+
 cd D:\distr\1\git\local_dirs\lab2\installdb
 helm uninstall pg
 helm install pg bitnami/postgresql -f values.yaml

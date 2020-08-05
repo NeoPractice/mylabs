@@ -19,7 +19,7 @@ def health():
 
 @app.route("/version")
 def version():
-    return '{"version": "0.1.0.0"}'
+    return '{"version": "0.1.0.2"}'
 
 @app.route("/")
 def hello():
@@ -31,7 +31,7 @@ def configuration():
 
 @app.route('/db')
 def db():
-    rows = []
+    rows=[]
     with engine.connect() as connection:
         result = connection.execute("select id, username from client;")
         rows = [dict(r.items()) for r in result]
@@ -40,17 +40,20 @@ def db():
 # Add
 @app.route('/user', methods=['POST'])
 def add_user():
-    id = request.json['id']
+    rows=[]
     username = request.json['username']
     firstname = request.json['firstname']
     lastname = request.json['lastname']
     email = request.json['email']
     phone = request.json['phone']
-
     with engine.connect() as connection:
-        connection.execute(f"insert into client(id, username, firstname, lastname, email, phone) values ({id}, '{username}', '{firstname}', '{lastname}', '{email}', '{phone}');")
+        with connection.begin():
+            connection.execute(f"insert into client(username, firstname, lastname, email, phone) values ('{username}', '{firstname}', '{lastname}', '{email}', '{phone}');")
+        with connection.begin():
+            result = connection.execute(f"select * from client where username = '{username}';")
+            rows = [dict(r.items()) for r in result]
 
-    return f"new user {username} id {id} added"
+    return json.dumps(rows)
 
 # Get
 @app.route('/user/<id>', methods=['GET'])
@@ -64,16 +67,19 @@ def get_user(id):
 # Update
 @app.route('/user', methods=['PUT'])
 def update_user():
+    rows = []    
     id = request.json['id']
     username = request.json['username']
     firstname = request.json['firstname']
     lastname = request.json['lastname']
     email = request.json['email']
     phone = request.json['phone']
-
     with engine.connect() as connection:
-        connection.execute(f"update client set username = '{username}', firstname = '{firstname}', lastname = '{lastname}', email = '{email}', phone = '{phone}' where id = {id};")
-    return f"user {username} id {id} updated"
+        with connection.begin():
+            connection.execute(f"update client set username = '{username}', firstname = '{firstname}', lastname = '{lastname}', email = '{email}', phone = '{phone}' where id = {id};")
+            result = connection.execute(f"select * from client where id = {id};")
+            rows = [dict(r.items()) for r in result]
+    return json.dumps(rows)
 
 # Delete
 @app.route('/user/<id>', methods=['DELETE'])
