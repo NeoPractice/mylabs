@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}"
+  name: "{{ .Release.Name }}-job"
   labels:
     app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
@@ -12,7 +12,7 @@ metadata:
     # job is considered part of the release.
     "helm.sh/hook": post-install
     "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   template:
     metadata:
@@ -49,7 +49,7 @@ spec:
           - |
             psql $DATABASE_URI <<'EOF'
               create table client(id serial primary key, username varchar, firstname varchar, lastname varchar, email varchar, phone varchar);
-              insert into client(id, username, firstname, lastname, email, phone) values (1, 'IIvanov', 'Ivan', 'Ivanov', 'IIvanov@mail.ru', '79001002233');
+              insert into client(username, firstname, lastname, email, phone) values ('IIvanov', 'Ivan', 'Ivanov', 'IIvanov@mail.ru', '79001002233');
             EOF
 
   backoffLimit: 0
