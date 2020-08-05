@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: student12345/lab2_1-py
+  repository: student12345/lab2-py
   pullPolicy: IfNotPresent
 
 service:

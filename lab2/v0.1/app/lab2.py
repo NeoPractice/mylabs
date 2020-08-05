@@ -37,7 +37,7 @@ def db():
         rows = [dict(r.items()) for r in result]
     return json.dumps(rows)
 
-# Add new user
+# Add
 @app.route('/user', methods=['POST'])
 def add_user():
     id = request.json['id']
@@ -50,9 +50,9 @@ def add_user():
     with engine.connect() as connection:
         connection.execute(f"insert into client(id, username, firstname, lastname, email, phone) values ({id}, '{username}', '{firstname}', '{lastname}', '{email}', '{phone}');")
 
-    return f"new user {username} added"
+    return f"new user {username} id {id} added"
 
-# Get user
+# Get
 @app.route('/user/<id>', methods=['GET'])
 def get_user(id):
     rows = []
@@ -61,7 +61,7 @@ def get_user(id):
         rows = [dict(r.items()) for r in result]
     return json.dumps(rows)
 
-# Update user
+# Update
 @app.route('/user', methods=['PUT'])
 def update_user():
     id = request.json['id']
@@ -73,9 +73,9 @@ def update_user():
 
     with engine.connect() as connection:
         connection.execute(f"update client set username = '{username}', firstname = '{firstname}', lastname = '{lastname}', email = '{email}', phone = '{phone}' where id = {id};")
-    return f"user {username} updated"
+    return f"user {username} id {id} updated"
 
-# Delete user
+# Delete
 @app.route('/user/<id>', methods=['DELETE'])
 def delete_user(id):
     with engine.connect() as connection:
