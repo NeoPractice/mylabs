@@ -1,10 +1,10 @@
 FROM python:3
-WORKDIR /usr/src/app
+WORKDIR /usr/src/lab2
 
-COPY app.py ./
+COPY lab2.py ./
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
 
-ENTRYPOINT ["python", "/usr/src/app/app.py"]
+ENTRYPOINT ["python", "/usr/src/lab2/lab2.py"]

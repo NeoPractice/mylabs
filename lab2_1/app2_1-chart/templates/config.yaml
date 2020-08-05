@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: alisha-config
+  name: lab2-config
 data:
   GREETING: Hello
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: alisha-secret
+  name: lab2-secret
 type: Opaque
 data:
   DATABASE_URI: {{ printf "postgresql+psycopg2://%s:%s@%s:%s/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase  | b64enc | quote }}

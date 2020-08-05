@@ -1,4 +1,4 @@
-##запуск
+﻿##запуск
 запустить docker quikstart terminal
 открыть cmd D:\Program Files\Kubernetes\Minikube
 minikube start
@@ -20,7 +20,7 @@ kubectl delete -n myapp secret lab2-secret
 kubectl delete -n myapp secret postgres
 #
 ##собрать локально образ
-cd D:\distr\1\git\local_dirs\lab2\lab2-py
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab2_1\app
 docker build -t lab2-py .
 ## запушить образ в dockerhub
 docker logout

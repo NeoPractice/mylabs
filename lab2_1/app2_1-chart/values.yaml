@@ -12,7 +12,7 @@ ingress:
   enabled: true
   hosts:
     - host: arch.homework
-      paths: ["/otusapp"]
+      paths: ["/otusapp/tyankis"]
 
 
 postgresql:

@@ -19,7 +19,7 @@ def health():
 
 @app.route("/version")
 def version():
-    return '{"version": "0.2.1"}'
+    return '{"version": "0.1.0.0"}'
 
 @app.route("/")
 def hello():
