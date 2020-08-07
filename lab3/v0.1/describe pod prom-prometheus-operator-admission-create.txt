@@ -1,0 +1,145 @@
+λ minikube start
+* minikube v1.12.1 on Microsoft Windows 7 Ultimate Service Pack 1 6.1.7601 Build 7601
+* Using the virtualbox driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Restarting existing virtualbox VM for "minikube" ...
+* minikube 1.12.2 is available! Download it: https://github.com/kubernetes/minikube/releases/tag/v1.12.2
+* To disable this notice, run: 'minikube config set WantUpdateNotification false'
+
+* Preparing Kubernetes v1.18.3 on Docker 19.03.12 ...
+* Verifying Kubernetes components...
+* Enabled addons: dashboard, default-storageclass, storage-provisioner
+* Done! kubectl is now configured to use "minikube"
+
+D:\Program Files\Kubernetes\Minikube
+λ minikube docker-env
+SET DOCKER_TLS_VERIFY=1
+SET DOCKER_HOST=tcp://192.168.99.103:2376
+SET DOCKER_CERT_PATH=C:\Users\Maikl\.minikube\certs
+SET MINIKUBE_ACTIVE_DOCKERD=minikube
+REM To point your shell to minikube's docker-daemon, run:
+REM @FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env') DO @%i
+
+D:\Program Files\Kubernetes\Minikube
+λ @FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env') DO @%i
+
+D:\Program Files\Kubernetes\Minikube
+λ SET DOCKER_TLS_VERIFY=1
+
+D:\Program Files\Kubernetes\Minikube
+λ helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "bitnami" chart repository
+...Successfully got an update from the "busybox" chart repository
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+
+D:\Program Files\Kubernetes\Minikube
+λ kubectl config set-context --current --namespace=monitoring
+Context "minikube" modified.
+
+D:\Program Files\Kubernetes\Minikube
+λ kubectl get all
+No resources found in monitoring namespace.
+
+D:\Program Files\Kubernetes\Minikube
+λ cd D:\distr\1\git\labs\arch-labs\prometheus
+
+D:\distr\1\git\labs\arch-labs\prometheus (master -> origin)
+λ minikube addons disable ingress
+* "The 'ingress' addon is disabled
+
+D:\distr\1\git\labs\arch-labs\prometheus (master -> origin)
+λ helm install prom stable/prometheus-operator -f prometheus.yaml
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+NAME: prom
+LAST DEPLOYED: Fri Aug  7 11:16:19 2020
+NAMESPACE: monitoring
+STATUS: deployed
+REVISION: 1
+NOTES:
+The Prometheus Operator has been installed. Check its status by running:
+  kubectl --namespace monitoring get pods -l "release=prom"
+
+Visit https://github.com/coreos/prometheus-operator for instructions on how
+to create & configure Alertmanager and Prometheus instances using the Operator.
+
+D:\distr\1\git\labs\arch-labs\prometheus (master -> origin)
+λ kubectl --namespace monitoring get pods -l "release=prom"
+NAME                                                 READY   STATUS    RESTARTS   AGE
+prom-prometheus-node-exporter-6rm9k                  1/1     Running   0          31s
+prom-prometheus-operator-admission-create-zwbxd      0/1     Error     2          27s
+prom-prometheus-operator-operator-74d9c94c49-p5x29   2/2     Running   0          31s
+
+D:\distr\1\git\labs\arch-labs\prometheus (master -> origin)
+λ kubectl describe pod prom-prometheus-operator-admission-create-zwbxd
+Name:         prom-prometheus-operator-admission-create-zwbxd
+Namespace:    monitoring
+Priority:     0
+Node:         minikube/192.168.99.103
+Start Time:   Fri, 07 Aug 2020 11:16:35 +0300
+Labels:       app=prometheus-operator-admission-create
+              chart=prometheus-operator-9.3.1
+              controller-uid=e7b9c490-1783-4d1b-a231-363069693ad4
+              heritage=Helm
+              job-name=prom-prometheus-operator-admission-create
+              release=prom
+Annotations:  <none>
+Status:       Running
+IP:           172.17.0.12
+IPs:
+  IP:           172.17.0.12
+Controlled By:  Job/prom-prometheus-operator-admission-create
+Containers:
+  create:
+    Container ID:  docker://be3078f5ebb30d37cf29d7ffb3501ef388f312e00f338109a58eecfd2eda3e2a
+    Image:         jettech/kube-webhook-certgen:v1.2.1
+    Image ID:      docker-pullable://jettech/kube-webhook-certgen@sha256:c42098c8d8553da203175a68a12fa91bd5a73d6c43736e9f339348404a263632
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      create
+      --host=prom-prometheus-operator-operator,prom-prometheus-operator-operator.monitoring.svc
+      --namespace=monitoring
+      --secret-name=prom-prometheus-operator-admission
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Fri, 07 Aug 2020 11:19:37 +0300
+      Finished:     Fri, 07 Aug 2020 11:19:37 +0300
+    Ready:          False
+    Restart Count:  5
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from prom-prometheus-operator-admission-token-8j5fz (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  prom-prometheus-operator-admission-token-8j5fz:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  prom-prometheus-operator-admission-token-8j5fz
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type     Reason       Age                    From               Message
+  ----     ------       ----                   ----               -------
+  Normal   Scheduled    4m                     default-scheduler  Successfully assigned monitoring/prom-prometheus-operator-admission-create-zwbxd to minikube
+  Warning  FailedMount  3m25s (x7 over 3m57s)  kubelet, minikube  MountVolume.SetUp failed for volume "prom-prometheus-operator-admission-token-8j5fz" : secret "prom-prometheus-operator-admission-token-8j5fz" not found
+  Normal   Pulled       3m13s (x4 over 3m58s)  kubelet, minikube  Container image "jettech/kube-webhook-certgen:v1.2.1" already present on machine
+  Normal   Created      3m13s (x4 over 3m58s)  kubelet, minikube  Created container create
+  Normal   Started      3m13s (x4 over 3m58s)  kubelet, minikube  Started container create
+  Warning  BackOff      3m (x6 over 3m54s)     kubelet, minikube  Back-off restarting failed container
