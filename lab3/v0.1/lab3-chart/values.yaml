@@ -1,0 +1,30 @@
+replicaCount: 2
+
+image:
+  repository: student12345/lab3-py
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 8000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: ["/otusapp/tyankis"]
+
+
+postgresql:
+  enabled: true
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: myapp
+  service:
+    type: NodePort
+    nodePort: "31721"
+    port: "5432"
+    
+metrics:
+  serviceMonitor:
+    enabled: true    
