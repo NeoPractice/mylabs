@@ -76,7 +76,7 @@ kubectl delete pod/myapp-hello-chart-676b9cc9f5-6b7gd
 cd D:\distr\1\git\labs\arch-labs\prometheus
 
 ##ДЗ
---------
+-------- если в namespace что-то есть, то очищаем
 kubectl delete all --all
 kubectl delete -n monitoring configmap --all
 kubectl delete -n monitoring Secrets --all
@@ -100,17 +100,22 @@ kubectl port-forward service/prom-grafana 9000:80
 
 kubectl port-forward service/prom-prometheus-operator-prometheus 9090
 kubectl get servicemonitors.monitoring.coreos.com
-
+--------
+#powershell -нагрузка
 while (1) {ab -n 50 -c 5 http://192.168.99.103:32541/db; sleep 3}
 
 while (1) {ab -n 50 -c 5 http://192.168.99.103:32541/user/1; sleep 3}
+-------
+#делаем дашбрды в графане D:\distr\1\git\labs\hudeir\rest-app\grafana можно импортировать(*.json)
 histogram_quantile(0.5, sum by (method, le, uri) (rate(app_request_latency_seconds_bucket[1m]))) * 1000
+-- в некоторых "expr" нужно заменить lab3- на название релиза
+-- в постман можно добавит новый запрос get http://{{baseUrl}}/otusapp/tyankis/metrics
 
+
+-------конец дз3
 cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab3\v0.1\lab3-chart
 helm install pgexprt -f values.yaml stable/prometheus-postgres-exporter
 helm list | grep pgexprt
-
-
 helm install prom stable/prometheus-operator -f prometheus.yaml
 helm install pgexprt stable/prometheus-postgres-exporter -f pgexpr.yaml
 
