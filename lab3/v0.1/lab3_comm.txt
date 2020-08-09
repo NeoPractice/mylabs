@@ -1,0 +1,256 @@
+﻿##запуск
+запустить docker quikstart terminal
+открыть cmd D:\Program Files\Kubernetes\Minikube
+minikube start
+minikube dashboard
+kubectl config set-context --current --namespace=myapp
+minikube docker-env
+@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env') DO @%i
+SET DOCKER_TLS_VERIFY="1"
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo update
+##установка
+minikube addons disable ingress
+kubectl create namespace monitoring
+kubectl config set-context --current --namespace=monitoring
+cd D:\distr\1\git\labs\arch-labs\prometheus
+
+
+kubectl port-forward service/prom-grafana 9000:80
+kubectl port-forward service/prom-prometheus-operator-prometheus 9090
+http://127.0.0.1:9090/service-discovery
+cd D:\distr\1\git\labs\arch-labs\prometheus\hello-py
+docker build -t hello-py:0.10.0 .
+cd D:\distr\1\git\labs\arch-labs\prometheus
+helm install myapp ./hello-chart --atomic
+kubectl get all -l app.kubernetes.io/instance=myapp
+helm list | grep myapp
+minikube service myapp-hello-chart -n monitoring --url
+http://192.168.99.103:30794
+curl -s http://192.168.99.103:30794/db
+curl -s http://192.168.99.103:30794/metrics
+kubectl get servicemonitors.monitoring.coreos.com
+##установка apache24 для использования ab
+
+установить с++
+https://www.comss.ru/page.php?id=6172
+
+распаковать
+https://www.apachelounge.com/download/
+
+Install
+-------
+  You must first install the Visual C++ Redistributable for Visual Studio 2015-2019 x64. 
+  Download and Install, if you have not done so already, see:
+
+   https://www.apachelounge.com/download/
+
+  Unzip the Apache24 folder to c:/Apache24 (that is the ServerRoot in the config).
+  The default folder for your your webpages is DocumentRoot "c:/Apache24/htdocs"
+
+  When you unzip to an other location: 
+  change Define SRVROOT "c:/Apache24"  in httpd.conf, for example to "E:/Apache24"
+  
+cd D:\Program Files\Apache24\bin httpd.exe
+
+#если ошибка(идем по иснструкции для установки. до php)
+https://puzzleweb.ru/other/apache.php
+
+
+https://puzzleweb.ru/other/virtual_hosts_apache.php
+
+Решение проблемы: apache2 could not reliably determine the server's fully qualified domain name using…
+администрирование веб-сервер консоль
+Часто встречаю мучительные поиски решений упомянутой в заголовке проблемы в Debian-подобных дистрибутивах, в том числе и в Ubuntu.
+
+А решение, тем временем, тривиальное и однозначное.
+
+Надо в vhosts.conf добавить директиву ServerName со значением localhost.
+
+## продолжаем практику
+#powershell
+while (1) {ab -n 50 -c 5 http://192.168.99.103:30794/db; sleep 3}
+#minikube
+kubectl delete pod/myapp-hello-chart-676b9cc9f5-6b7gd
+
+cd D:\distr\1\git\labs\arch-labs\prometheus
+
+##ДЗ
+--------
+kubectl delete all --all
+kubectl delete -n monitoring configmap --all
+kubectl delete -n monitoring Secrets --all
+--------
+#собрать локально образ
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab3\v0.1\app
+docker build -t lab3 .
+docker tag 99408ff97fd7 student12345/lab3-py:0.4.1.0
+docker push student12345/lab3-py:0.4.1.0
+docker pull student12345/lab3-py:0.4.1.0
+--------
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab3\v0.1
+helm install prom stable/prometheus-operator -f prometheus.yaml
+helm install nginx stable/nginx-ingress -f nginx-ingress.yaml
+helm install lab3 ./lab3-chart 
+minikube service lab3-chart -n monitoring --url
+http://192.168.99.103:32541
+helm list | grep lab3
+--------
+kubectl port-forward service/prom-grafana 9000:80
+
+kubectl port-forward service/prom-prometheus-operator-prometheus 9090
+kubectl get servicemonitors.monitoring.coreos.com
+
+while (1) {ab -n 50 -c 5 http://192.168.99.103:32541/db; sleep 3}
+
+while (1) {ab -n 50 -c 5 http://192.168.99.103:32541/user/1; sleep 3}
+histogram_quantile(0.5, sum by (method, le, uri) (rate(app_request_latency_seconds_bucket[1m]))) * 1000
+
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab3\v0.1\lab3-chart
+helm install pgexprt -f values.yaml stable/prometheus-postgres-exporter
+helm list | grep pgexprt
+
+
+helm install prom stable/prometheus-operator -f prometheus.yaml
+helm install pgexprt stable/prometheus-postgres-exporter -f pgexpr.yaml
+
+
+
+---------------
+#очистка миникуба
+kubectl delete all --all
+kubectl delete -n myapp persistentvolumeclaim data-postgres-0
+kubectl delete -n myapp ingress lab2-ingress
+kubectl delete -n myapp configmap lab2-config
+kubectl delete -n myapp secret lab2-secret
+kubectl delete -n myapp secret postgres
+#
+##собрать локально образ
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab2_1\app
+docker build -t lab2-py .
+## запушить образ в dockerhub
+docker logout
+student12345:709820709820 - доступ к dockerhub
+docker login
+docker untag student12345/lab2-py:latest
+docker tag 99408ff97fd7 student12345/lab2-py:latest
+docker push student12345/lab2-py:latest
+docker pull student12345/lab2-py:latest
+##
+helm uninstall lab2
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab2\v0.1
+helm install lab2 ./lab2-chart
+
+
+
+
+cd D:\distr\1\git\local_dirs\lab2\installdb
+helm uninstall pg
+helm install pg bitnami/postgresql -f values.yaml
+- команда применения первоначальных миграций
+kubectl apply -f initdb-initc.yaml
+### запустить pgadmin
+master password: pg
+## корректируем порт в pgadmin
+minikube service postgres -n myapp --url
+## правим database uri 
+http://base64.ru/
+postgresql+psycopg2://myuser:passwd@postgres:30438/myapp
+DATABASE_URI: cG9zdGdyZXNxbCtwc3ljb3BnMjovL215dXNlcjpwYXNzd2RAcG9zdGdyZXM6MzA0MzgvbXlhcHA=    
+cd D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab2_1
+helm install myapp ./app2_1-chart
+
+
+
+
+- команда kubectl apply -f, которая запускает в правильном порядке манифесты кубернетеса (сделала через skaffold)
+
+
+
+
+cd D:\distr\1\git\labs\arch-labs\statefulset -- в этой папке нет example_volumes.yaml
+kubectl apply -f postgres.yaml
+minikube service postgres -n myapp --url
+http://192.168.99.103:31876
+psql -h 192.168.99.103 -p 31876 -U myuser -W myapp
+https://helm.sh/docs/intro/install/
+λ helm repo add stable https://kubernetes-charts.storage.googleapis.com
+"stable" has been added to your repositories
+https://github.com/helm/charts/tree/master/stable
+helm repo add bitnami https://charts.bitnami.com/bitnami
+"bitnami" has been added to your repositories
+helm repo update
+helm install pg stable/postgresql
+    kubectl port-forward --namespace myapp svc/pg-postgresql 5432:5432 &
+    PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
+helm install pg stable/postgresql --dry-run
+helm install pg stable/postgresql -f values.yaml
+helm uninstall pg
+https://skaffold.dev/docs/install/
+
+curl -s http://192.168.176.128:31399/config  | jq
+curl -s http://192.168.176.128:31399/config  | jq
+
+
+
+docker ps
+docker images lab1
+###λ docker stop b97bb04f2fe0
+###λ docker rm b97bb04f2fe0
+###λ docker rmi 45b5c40caa9b
+##собрать локально образ
+cd D:\distr\1\git\local_dirs\lab1\lab1-py
+docker build -t lab1-py .
+####Successfully built 99408ff97fd7
+####Successfully tagged lab1-py:latest
+## запушить образ в dockerhub
+docker logout
+docker login
+docker tag 99408ff97fd7 student12345/lab1-py:latest
+docker push student12345/lab1-py:latest
+## ingress
+ minikube addons enable ingress
+ kubectl get pods -n kube-system | grep ingress
+ kubectl apply -f deployment.yaml -f service.yaml -f ingress.yaml
+ D:\distr\1\git\local_dirs\github\mylabs\mylabs\lab1\manifests
+ http://arch.homework/otusapp/tyankis/health
+ minikube service lab1-service --url -n myapp
+http://192.168.99.103:31344
+c:\Windows\System32\drivers\etc\
+##addons lab2
+minikube addons list
+minikube ip
+###statefullset
+#### установить локально 
+https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+https://postgrespro.ru/docs/postgrespro/9.6/auth-pg-hba-conf
+Файл pg_hba.conf
+метод-аутентификации на password с md5 для localhost
+#### postgress superuser=postgres password=pg port=5432
+#### https://app.swaggerhub.com/ login=yankis password=709820Nt
+kubectl delete all --all
+cd D:\distr\1\git\labs\arch-labs\statefulset -- в этой папке нет example_volumes.yaml
+kubectl apply -f postgres.yaml
+kubectl get pv
+kubectl get pvc
+#### kubectl get all -- инфо о всем что запущено
+kubectl describe pod/postgres-statefulset-0  -- нет никаких events
+minikube service postgres -n myapp --url
+http://192.168.99.103:31876
+λ psql postgres://myuser:passwd@192.168.99.103:31876/myapp
+"psql" не является внутренней или внешней
+командой, исполняемой программой или пакетным файлом.
+kubectl exec -it postgres-statefulset-0 -- /bin/bash
+minikube service postgres -n myapp --url
+192.168.99.103:31876
+psql -h 192.168.99.103 -p 31876 -U myuser -W myapp
+password: passwd
+psql: erIs the server running on host "192.168.99.103" and acceptingr: Connection timed out
+        TCP/IP connections on port 31876?
+		mountPath: /var/lib/postgresql/data
+#### не работает psql postgres:myuser:passwd@192.168.99.103:31876/myapp
+подключаемся из командой сртроки
+		
+psql -h 192.168.99.103 -p 31876 -U myuser -W myapp
+http://base64.ru/ - перекодировщик для секрета
+#### форматируемая строка для питона f"" : https://webdevblog.ru/obnaruzhenie-sql-inekcij-v-kode-python-s-ispolzovaniem-ast/

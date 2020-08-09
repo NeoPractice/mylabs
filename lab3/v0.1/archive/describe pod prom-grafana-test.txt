@@ -1,0 +1,63 @@
+λ kubectl describe pod prom-grafana-test
+Name:         prom-grafana-test
+Namespace:    monitoring
+Priority:     0
+Node:         minikube/192.168.99.103
+Start Time:   Thu, 06 Aug 2020 14:18:09 +0300
+Labels:       app.kubernetes.io/instance=prom
+              app.kubernetes.io/managed-by=Helm
+              app.kubernetes.io/name=grafana
+              app.kubernetes.io/version=7.0.3
+              helm.sh/chart=grafana-5.3.0
+Annotations:  helm.sh/hook: test-success
+              meta.helm.sh/release-name: prom
+              meta.helm.sh/release-namespace: monitoring
+Status:       Failed
+IP:           172.17.0.9
+IPs:
+  IP:  172.17.0.9
+Containers:
+  prom-test:
+    Container ID:  docker://a2ddf2ceda2bef8c79984f961566cd7d83ea9fdd26d
+cf2de73c33ee153db746e
+    Image:         bats/bats:v1.1.0
+    Image ID:      docker-pullable://bats/bats@sha256:97d91ee0aa9771e69
+6cdf44c2b1672af484fd846eaf52ba2db6061f5c78a89d5
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /opt/bats/bin/bats
+      -t
+      /tests/run.sh
+    State:          Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Thu, 06 Aug 2020 14:18:46 +0300
+      Finished:     Thu, 06 Aug 2020 14:18:56 +0300
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /tests from tests (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from prom-grafana-t
+est-token-4r2pv (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  tests:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      prom-grafana-test
+    Optional:  false
+  prom-grafana-test-token-4r2pv:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  prom-grafana-test-token-4r2pv
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:          <none>
